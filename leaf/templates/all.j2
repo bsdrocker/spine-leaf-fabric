@@ -1,0 +1,10 @@
+#jinja2: trim_blocks: False
+#jinja2: lstrip_blocks: False
+{% include 'mgmt.j2' %}
+{% include 'fabric.j2' %}
+{% include 'vlan.j2' %}
+{% include 'bgp.j2' %}
+{% if mlag is defined %}
+{% include 'mlag.j2' %}
+{% endif %}
+{% include 'host_int.j2' %}

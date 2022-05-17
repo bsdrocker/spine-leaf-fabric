@@ -1,0 +1,69 @@
+---
+hostname: leaf3
+mgmt_int: Management1
+mgmt_vrf: Mgmt
+mgmt_ip: 192.168.34.113/23
+lo0_ip: 192.168.36.113/32
+lo1_ip: 192.168.36.213/32
+bgp:
+  asn: 65003
+  router_id: 192.168.36.113
+  maximum_paths: 4
+  redistribute: connected
+  pg_list:
+    - name: spine
+      vrf: default
+      peers:
+        - name: spine1
+          peer_ip: 10.0.1.4
+        - name: spine2
+          peer_ip: 10.0.2.4
+l3_interfaces:
+  - name: Ethernet1
+    ip_add: 10.0.1.5/31
+    desc: "Et1-spine1:Et3"
+  - name: Ethernet2
+    ip_add: 10.0.2.5/31
+    desc: "Et2-spine2:Et3"
+mlag_peer_interfaces:
+host_interfaces:
+  - name: Ethernet1
+    state: disabled
+    switchport_mode: spine-leaf
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet2
+    state: disabled
+    switchport_mode: spine-leaf
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet3
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet4
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet5
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet6
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet7
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet8
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description

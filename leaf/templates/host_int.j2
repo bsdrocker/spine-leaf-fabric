@@ -1,0 +1,18 @@
+{% for int in host_interfaces %}
+{% if mlag_peer_interfaces | selectattr('name', 'match', int.name + '$') | list | count == 0 and l3_interfaces | selectattr('name', 'match', int.name + '$') | list | count == 0 %}
+interface {{ int.name }}
+  description {{ int.description }}
+  {% if int.state == 'disabled' %}
+  shutdown
+  {% elif int.state == 'enabled' %}
+  no shutdown
+  {% endif %}
+  {% if int.switchport_mode == 'access' %}
+  switchport mode access
+  switchport access vlan {{ int.switchport_vlan_list }}
+  {% elif int.switchport_mode == 'trunk' %}
+  switchport mode trunk
+  switchport trunk allowed vlan {{ int.switchport_vlan_list }}
+  {% endif %}
+{% endif %}
+{% endfor %}

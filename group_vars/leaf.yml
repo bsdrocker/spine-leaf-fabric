@@ -1,0 +1,31 @@
+---
+peer_groups:
+  - name: spine
+    peer_asn: 65000
+    fall_over_bfd: False
+    default_originate: False
+  - name: leaf_evpn
+    next_hop: unchanged
+    update_source: Loopback0
+    ebgp_multihop: 2
+    send_community: send-community extended
+vlan_list:
+  - name: L2Only
+    vlan_id: 100
+    vni: 100
+    present:
+      - name: leaf1
+        svi: false
+      - name: leaf3
+        svi: false
+  - name: Data
+    vlan_id: 200
+    vni: 200
+    vlan_vip: 10.200.0.1/24
+    present:
+      - name: leaf1
+        svi: true
+      - name: leaf2
+        svi: true
+      - name: leaf3
+        svi: true

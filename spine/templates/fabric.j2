@@ -1,0 +1,14 @@
+service routing protocols model multi-agent
+{% for int in l3_interfaces %}
+interface {{ int.name }}
+  no shutdown
+  no switchport
+  ip address {{ int.ip_add }}
+  description {{ int.desc }}
+{% endfor %}
+ip routing
+{% if lo0_ip is defined %}
+interface Loopback0
+  ip address {{ lo0_ip }}
+  description Lo0
+{% endif %}

@@ -1,0 +1,6 @@
+---
+lsw_asn_range: 65001-65010
+peer_groups:
+  - name: leaf
+    fall_over_bfd: False
+    default_originate: True

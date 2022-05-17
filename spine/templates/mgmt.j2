@@ -1,0 +1,7 @@
+hostname {{ inventory_hostname }}
+username admin role network-admin secret sha512 $6$I9Vo3SJpK3YWEUli$D8Mj91pVkzMa4Op9C./Ju6q0Vj2IVM4hg6.vJSxaCvpGi99EiDagf1dEHP/llBfwjO3F3fvfES4kTjowsdc8F/
+vrf instance {{ mgmt_vrf }}
+interface Management1
+  vrf {{ mgmt_vrf }}
+  ip address {{ mgmt_ip }}
+ip route vrf {{ mgmt_vrf }} 0.0.0.0/0 {{ mgmt_gw }}

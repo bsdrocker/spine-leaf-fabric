@@ -1,0 +1,6 @@
+---
+- name: Push Spine Config
+  eos_config:
+    src: "templates/all.j2"
+    diff_against: session
+    replace: config

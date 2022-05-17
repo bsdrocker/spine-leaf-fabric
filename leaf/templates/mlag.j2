@@ -1,0 +1,35 @@
+no spanning-tree vlan-id 4093-4094
+
+vlan {{ mlag.vlan }}
+  name {{ mlag.domain_id }}
+  trunk group mlag
+vlan {{ mlag_bgp.vlan }}
+  name {{ mlag_bgp.name }}
+  trunk group mlag
+
+interface vlan {{ mlag.vlan }}
+  description {{ mlag.domain_id }}
+  no autostate
+  ip address {{ mlag.node_ip }}/31
+
+interface vlan {{ mlag_bgp.vlan }}
+  description {{ mlag_bgp.name }}
+  no autostate
+  ip address {{ mlag_bgp.ip_address }}/31
+
+interface port-channel {{ mlag.port_channel_id }}
+  description {{ mlag.domain_id }}
+  switchport mode trunk
+  switchport trunk group mlag
+
+{% for int in mlag_peer_interfaces %}
+interface {{ int.name }}
+   description {{ int.description }}
+   channel-group 2000 mode active
+{% endfor %}
+
+mlag configuration
+  local-interface vlan {{ mlag.vlan }}
+  peer-address {{ mlag.peer_ip }}
+  peer-link port-channel {{ mlag.port_channel_id }}
+  domain-id {{ mlag.domain_id }}

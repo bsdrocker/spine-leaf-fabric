@@ -1,0 +1,86 @@
+---
+hostname: leaf1
+mgmt_int: Management1
+mgmt_vrf: Mgmt
+mgmt_ip: 192.168.34.111/23
+lo0_ip: 192.168.36.111/32
+lo1_ip: 192.168.36.211/32
+bgp:
+  asn: 65001
+  router_id: 192.168.36.111
+  maximum_paths: 4
+  redistribute: connected
+  pg_list:
+    - name: spine
+      vrf: default
+      peers:
+        - name: spine1
+          peer_ip: 10.0.1.0
+        - name: spine2
+          peer_ip: 10.0.2.0
+mlag:
+  domain_id: leaf_mlag
+  vlan: 4094
+  mlag_peer: leaf2
+  node_ip: 10.255.255.0
+  peer_ip: 10.255.255.1
+  port_channel_id: 2000
+mlag_bgp:
+  vlan: 4093
+  name: leaf_l3_peer
+  ip_address: 10.255.254.0
+  peer_ip: 10.255.254.1
+  peer_asn: 65002
+mlag_peer_interfaces:
+  - name: Ethernet7
+    description: MLAG-Port-channel
+  - name: Ethernet8
+    description: MLAG-Port-channel
+l3_interfaces:
+  - name: Ethernet1
+    ip_add: 10.0.1.1/31
+    desc: "Et1-spine1:Et1"
+  - name: Ethernet2
+    ip_add: 10.0.2.1/31
+    desc: "Et2-spine2:Et1"
+host_interfaces:
+  - name: Ethernet1
+    state: disabled
+    switchport_mode: spine-leaf
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet2
+    state: disabled
+    switchport_mode: spine-leaf
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet3
+    state: enabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: change_me
+  - name: Ethernet4
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet5
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet6
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet7
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description
+  - name: Ethernet8
+    state: disabled
+    switchport_mode: access
+    switchport_vlan_list: 1
+    description: default_description

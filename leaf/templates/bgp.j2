@@ -1,0 +1,52 @@
+router bgp {{ bgp.asn }}
+   router-id {{ bgp.router_id }}
+   maximum-paths {{ bgp.maximum_paths }}
+   redistribute {{ bgp.redistribute }}
+{% for pg in bgp.pg_list %}
+  {% set config_list = [] %}
+  {% for item in peer_groups %}
+    {% if pg.name in item.values() %}
+      {% if pg.peer_asn is defined %}
+        {% set _ = config_list.append('remote-as ' ~ pg.peer_asn) %}
+      {% elif item['peer_asn'] is defined %}
+        {% set _ = config_list.append('remote-as ' ~ item['peer_asn']) %}
+      {% endif %}
+      {% if item['next_hop'] is defined %}
+        {% set _ = config_list.append('next-hop-' ~ item['next_hop']) %}
+      {% endif %}
+      {% if item['fall_over_bfd'] is defined and item['fall_over_bfd'] %}
+        {% set _ = config_list.append('bfd') %}
+      {% endif %}
+      {% if item['update_source'] is defined %}
+        {% set _ = config_list.append('update-source ' ~ item['update_source']) %}
+      {% endif %}
+      {% if item['ebgp_multihop'] is defined %}
+        {% set _ = config_list.append('ebgp-multihop ' ~ item['ebgp_multihop']) %}
+      {% endif %}
+      {% if item['route_map'] is defined %}
+        {% for rm in item['route_map'] %}
+          {% set _ = config_list.append('route-map ' ~ rm['name'] ~ ' ' ~ rm['direction']) %}
+        {% endfor %}
+      {% endif %}
+      {% if item['default_originate'] is defined and item['default_originate'] %}
+        {% set _ = config_list.append('default-originate') %}
+      {% endif %}
+      {% if item['send_community'] is defined %}
+        {% set _ = config_list.append(item['send_community']) %}
+      {% endif %}
+      {% if item['maximum_routes'] is defined %}
+        {% set _ = config_list.append('maximum-routes ' ~ item['maximum_routes']) %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+   neighbor {{ pg.name }} peer group
+  {% for item in config_list %}
+   neighbor {{ pg.name }} {{ item }}
+  {% endfor %}
+  {% if pg.peers is defined and pg.vrf == 'default' %}
+    {% for peer in pg.peers %}
+    neighbor {{ peer.peer_ip }} peer group {{ pg.name }}
+    neighbor {{ peer.peer_ip }} description {{ peer.name }}
+    {% endfor %}
+  {% endif %}
+{% endfor %}

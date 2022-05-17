@@ -1,0 +1,12 @@
+{% for vlan in vlan_list %}
+{% set vlan_finder = vlan.present | selectattr('name', 'match', hostname ~ '$') | list %}
+{% if vlan_finder | count > 0 %}
+  {% set state = 'present' %}
+{% else %}
+  {% set state = 'absent' %}
+{% endif %}
+{% if state == 'present' %}
+vlan {{ vlan.vlan_id }}
+  name {{ vlan.name }}
+{% endif %}
+{% endfor %}

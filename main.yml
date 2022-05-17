@@ -1,0 +1,9 @@
+---
+- hosts: spine
+  gather_facts: no
+  roles:
+    - spine
+- hosts: leaf
+  gather_facts: no
+  roles:
+    - leaf
